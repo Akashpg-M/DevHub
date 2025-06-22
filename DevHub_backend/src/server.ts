@@ -1,0 +1,82 @@
+import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { createServer } from 'http';
+import cookieParser from 'cookie-parser';
+import passport from 'passport';
+
+import authRouter from './auth_app/routes/auth.route';
+import communityRouter from './community/routes/index';
+import { connectDB } from './db';
+import path from "path";
+
+dotenv.config();
+
+const app = express();
+const httpServer = createServer(app);
+
+const __dirname = path.resolve();
+// Middleware
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH','DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie'],
+    exposedHeaders: ['Set-Cookie'],
+  })
+);
+
+app.options('*', cors());
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.use(passport.initialize()); // Only needed for Google OAuth
+
+// Routes
+app.use('/api/auth', authRouter);
+app.use('/api/community', communityRouter);
+
+// Error handling
+interface AppError extends Error {
+  statusCode?: number;
+  status?: number;
+  message: string;
+  stack?: string;
+}
+
+app.use((err: AppError, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('Error:', err.stack);
+  const statusCode = err.statusCode || err.status || 500;
+  res.status(statusCode).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname, "../DevHub_frontend/dist")));
+
+  app.get("*", (_req, res) => {
+    res.sendFile(path.join(__dirname, "../DevHub_frontend", "dist", "index.html"));
+  })
+}
+
+connectDB()
+  .then(() => {
+    httpServer.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error starting server:', error);
+    process.exit(1);
+  });
+
+export default app;
