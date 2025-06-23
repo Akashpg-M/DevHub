@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "server.ts",
   "scripts": {
-    "build" : "npm install --prefix DevHub_backend && npm install --prefix DevHub_frontend && npm run build --prefix DevHub_frontend",
+    "build" : "npm run build --prefix DevHub_backend && npm run build --prefix DevHub_frontend",
     "start": "npm run start --prefix DevHub_backend"
   },
   "keywords": [],

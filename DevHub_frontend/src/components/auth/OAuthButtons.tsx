@@ -92,7 +92,7 @@ export const OAuthButtons = ({
   const handleOAuthLogin = (provider: OAuthProvider) => {
     // Generate state matching backend format
     const stateParam = btoa(JSON.stringify({ returnTo: from }));
-    const backendUrl = import.meta.env.MODE === "development" ? "http://localhost:3000" : "";  //  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3000",
+    const backendUrl = import.meta.env.MODE === "development" ? "http://localhost:3000" : "";
 
     if (provider === 'google') {
       const redirectUrl = `${backendUrl}/api/auth/google?prompt=select_account&state=${encodeURIComponent(stateParam)}`;

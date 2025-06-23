@@ -4,18 +4,17 @@ import dotenv from 'dotenv';
 import { createServer } from 'http';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
-
+import path from 'path';
 import authRouter from './auth_app/routes/auth.route';
 import communityRouter from './community/routes/index';
 import { connectDB } from './db';
-import path from "path";
 
 dotenv.config();
+
 
 const app = express();
 const httpServer = createServer(app);
 
-const __dirname = path.resolve();
 // Middleware
 app.use(
   cors({
@@ -34,6 +33,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use(passport.initialize()); // Only needed for Google OAuth
+
+// Health check endpoint
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+  });
+});
 
 // Routes
 app.use('/api/auth', authRouter);
@@ -57,16 +65,26 @@ app.use((err: AppError, _req: Request, res: Response, _next: NextFunction) => {
   });
 });
 
+
+
+if (process.env.NODE_ENV === 'production') {
+  const frontendPath = path.join(__dirname, '..', '..', 'DevHub_frontend', 'dist');
+  console.log('Serving static files from:', frontendPath);
+  app.use(express.static(frontendPath));
+
+  app.get('*', (_req, res) => {
+    const indexPath = path.join(frontendPath, 'index.html');
+    console.log('Serving index.html from:', indexPath);
+    res.sendFile(indexPath, (err) => {
+      if (err) {
+        console.error('Error serving index.html:', err);
+        res.status(500).send('Server error');
+      }
+    });
+  });
+}
 // Start server
 const PORT = process.env.PORT || 3000;
-
-if(process.env.NODE_ENV === "production"){
-  app.use(express.static(path.join(__dirname, "../DevHub_frontend/dist")));
-
-  app.get("*", (_req, res) => {
-    res.sendFile(path.join(__dirname, "../DevHub_frontend", "dist", "index.html"));
-  })
-}
 
 connectDB()
   .then(() => {
