@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { useAuthStore } from '../store/useAuthStore';
 import { showApiErrorToast } from '../lib/apiErrorHandler';
 import useForm from '../hooks/useForm';
-import OAuthButtons from '../components/auth/OAuthButtons';
+// import OAuthButtons from '../components/auth/OAuthButtons';
 
 // Define validation schema
 const loginSchema = z.object({
@@ -92,7 +92,6 @@ const LoginPage: React.FC = () => {
                 required
                 value={values.password}
                 onChange={(e) => handleChange('password', e.target.value)}
-                onBlur={() => handleBlur('password')}
                 className={`appearance-none block w-full pl-10 pr-3 py-2 border ${
                   touched.password && errors.password ? 'border-red-500' : 'border-gray-300'
                 } rounded-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-colors duration-200`}
@@ -125,7 +124,7 @@ const LoginPage: React.FC = () => {
           </button>
         </form>
 
-        <OAuthButtons />
+        {/* <OAuthButtons /> */}
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?{' '}

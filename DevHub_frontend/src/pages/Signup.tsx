@@ -1,8 +1,8 @@
-import { useState, type FormEvent } from "react";
+// import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Mail, Lock, User, Loader2 } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
-import OAuthButtons from "../components/auth/OAuthButtons";
+// import OAuthButtons from "../components/auth/OAuthButtons";
 import { z } from 'zod';
 import useForm from '../hooks/useForm';
 
@@ -175,7 +175,7 @@ const SignupPage: React.FC = () => {
           </button>
         </form>
 
-        <OAuthButtons />
+        {/* <OAuthButtons /> */}
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}

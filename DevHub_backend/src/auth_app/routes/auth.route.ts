@@ -2,8 +2,6 @@ import express, { Request, Response, NextFunction } from "express";
 import { 
   signUp, 
   login, 
-  googleAuth, 
-  googleAuthCallback, 
   logout, 
   checkAuth 
 } from "../controllers/auth.controller";
@@ -11,12 +9,7 @@ import { protectRoute } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
-// Google OAuth routes
-router.get("/google", googleAuth);
 
-// Google OAuth callback route
-
-router.get("/google/secrets", googleAuthCallback);
 
 
 // Regular auth routes
