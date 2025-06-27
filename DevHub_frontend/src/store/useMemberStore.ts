@@ -43,13 +43,10 @@ export const useMemberStore = create<MemberState>((set) => ({
   fetchMembers: async (communityId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching members for communityId:', communityId);
-      console.log('API Base URL:', axios.defaults.baseURL);
       const token = localStorage.getItem('token'); // Adjust based on your auth setup
       const { data } = await axios.get<ApiResponse>(`/api/community/${communityId}/members`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('API Response:', data);
       
       if (!data || data.status !== 'success') {
         throw new Error('Invalid response format');

@@ -105,7 +105,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
-      console.log('Validation error:', parsed.error.errors);
       return res.status(400).json({ 
         success: false, 
         message: parsed.error.errors[0].message 
@@ -127,7 +126,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     });
     
     if (!user) {
-      console.log('No user found with email:', email);
       return res.status(400).json({ 
         success: false, 
         message: "Invalid email or password" 
@@ -135,7 +133,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     }
 
     if (!user.password) {
-      console.log('User has no password (possibly OAuth user):', user.id);
       return res.status(400).json({ 
         success: false, 
         message: "Please sign in with your OAuth provider" 
@@ -166,8 +163,6 @@ export const login = async (req: Request, res: Response): Promise<Response | voi
     });
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    console.error("Error in login:", errorMessage);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     
     res.status(500).json({ 
       success: false, 
@@ -185,7 +180,6 @@ export const logout = (_req: Request, res: Response): void => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ success: true, message: "Logged out successfully" });
   } catch (error: unknown) {
-    console.error("Logout error:", error instanceof Error ? error.message : "Unknown error");
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
@@ -224,7 +218,6 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
       data: user 
     });
   } catch (error: unknown) {
-    console.error("Check auth error:", error instanceof Error ? error.message : "Unknown error");
     res.status(500).json({ 
       success: false, 
       message: "Internal Server Error" 

@@ -56,7 +56,6 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ loading: true });
     try {
       const res = await axios.post("api/auth/login", { email, password }, { withCredentials: true });
-      console.log('Login response:', { data: res.data, headers: res.headers }); // Debug
       const userData = res.data.data; // Backend wraps user in 'data'
       if (!userData?.id) throw new Error("Invalid user data");
 

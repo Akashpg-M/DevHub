@@ -93,14 +93,11 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   fetchProjects: async (communityId: string, pageNumber = 1, pageSize = 10) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching projects for communityId:', communityId, { pageNumber, pageSize });
-      console.log('API Base URL:', axios.defaults.baseURL);
       const token = localStorage.getItem('token');
       const { data } = await axios.get<PaginatedResponse<Project>>(`/api/community/${communityId}/project`, {
         params: { pageNumber, pageSize },
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Projects API Response:', data);
 
       if (!data || !data.projects) {
         throw new Error('Invalid projects response');
@@ -138,12 +135,10 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   fetchProjectById: async (communityId: string, projectId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching project:', { communityId, projectId });
       const token = localStorage.getItem('token');
       const { data } = await axios.get<Project>(`/api/community/${communityId}/project/${projectId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Project API Response:', data);
       set({ currentProject: data });
     } catch (error: any) {
       console.error('Fetch Project Error:', {
@@ -171,7 +166,6 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   createProject: async (communityId: string, data: CreateProjectData) => {
     set({ loading: true, error: null });
     try {
-      console.log('Creating project for communityId:', communityId, data);
       const token = localStorage.getItem('token');
       const response = await axios.post<Project>(`/api/community/${communityId}/project`, data, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -210,7 +204,6 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   updateProject: async (communityId: string, projectId: string, data: UpdateProjectData) => {
     set({ loading: true, error: null });
     try {
-      console.log('Updating project:', { communityId, projectId, data });
       const token = localStorage.getItem('token');
       const response = await axios.put<Project>(`/api/community/${communityId}/project/${projectId}`, data, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -249,7 +242,6 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   deleteProject: async (communityId: string, projectId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Deleting project:', { communityId, projectId });
       const token = localStorage.getItem('token');
       await axios.delete(`/api/community/${communityId}/project/${projectId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -288,7 +280,6 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   joinProject: async (communityId: string, projectId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Joining project:', { communityId, projectId });
       const token = localStorage.getItem('token');
       const response = await axios.post<ProjectMember>(`/api/community/${communityId}/project/${projectId}/join`, {}, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
@@ -333,7 +324,6 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   leaveProject: async (communityId: string, projectId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Leaving project:', { communityId, projectId });
       const token = localStorage.getItem('token');
       const currentUserId = localStorage.getItem('userId'); // Adjust based on your auth setup
       await axios.post(`/api/community/${communityId}/project/${projectId}/leave`, {}, {
@@ -378,13 +368,11 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   fetchProjectMembers: async (communityId: string, projectId: string, pageNumber = 1, pageSize = 10) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching project members:', { communityId, projectId, pageNumber, pageSize });
       const token = localStorage.getItem('token');
       const { data } = await axios.get<PaginatedResponse<User>>(`/api/community/${communityId}/project/${projectId}/members`, {
         params: { pageNumber, pageSize },
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Project Members API Response:', data);
       if (!data || !data.members) {
         throw new Error('Invalid project members response');
       }
@@ -415,12 +403,10 @@ export const useProjectStore = create<ProjectState>((set, _get) => ({
   fetchProjectAnalytics: async (communityId: string, projectId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching project analytics:', { communityId, projectId });
       const token = localStorage.getItem('token');
       const { data } = await axios.get<ProjectAnalytics>(`/api/community/${communityId}/project/${projectId}/analytics`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Project Analytics API Response:', data);
       set({ projectAnalytics: data });
     } catch (error: any) {
       console.error('Fetch Project Analytics Error:', {

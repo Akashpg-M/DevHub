@@ -136,8 +136,6 @@ export const useTaskStore = create<TaskState>((set) => ({
   fetchTasks: async (communityId: string, filters?: TaskFilters, pagination?: PaginationParams) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching tasks for communityId:', communityId, { filters, pagination });
-      console.log('API Base URL:', axios.defaults.baseURL);
       const token = localStorage.getItem('token');
       const params: any = {
         pageSize: pagination?.pageSize || 10,
@@ -154,7 +152,6 @@ export const useTaskStore = create<TaskState>((set) => ({
         params,
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Tasks API Response:', data);
 
       if (!data || !Array.isArray(data.tasks)) {
         throw new Error('Invalid tasks response');
@@ -193,12 +190,10 @@ export const useTaskStore = create<TaskState>((set) => ({
   fetchTaskById: async (communityId: string, taskId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Fetching task:', { communityId, taskId });
       const token = localStorage.getItem('token');
       const { data } = await axios.get<Task>(`/api/community/${communityId}/task/${taskId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Task API Response:', data);
       set({ currentTask: data });
     } catch (error: any) {
       console.error('Fetch Task Error:', {
@@ -226,12 +221,10 @@ export const useTaskStore = create<TaskState>((set) => ({
   createTask: async (communityId: string, data: CreateTaskData) => {
     set({ loading: true, error: null });
     try {
-      console.log('Creating task for communityId:', communityId, data);
       const token = localStorage.getItem('token');
       const response = await axios.post<TaskResponse>(`/api/community/${communityId}/task`, data, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Create Task API Response:', response.data);
       const newTask = response.data.data.task;
       set(state => ({
         tasks: [newTask, ...state.tasks],
@@ -268,12 +261,10 @@ export const useTaskStore = create<TaskState>((set) => ({
   updateTask: async (communityId: string, taskId: string, data: UpdateTaskData) => {
     set({ loading: true, error: null });
     try {
-      console.log('Updating task:', { communityId, taskId, data });
       const token = localStorage.getItem('token');
       const response = await axios.put<{ message: string; task: Task }>(`/api/community/${communityId}/task/${taskId}`, data, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Update Task API Response:', response.data);
       const updatedTask = response.data.task;
       set(state => ({
         tasks: state.tasks.map(t => (t.id === taskId ? updatedTask : t)),
@@ -308,12 +299,10 @@ export const useTaskStore = create<TaskState>((set) => ({
   updateTaskStatus: async (communityId: string, taskId: string, status: TaskStatusEnum) => {
     set({ loading: true, error: null });
     try {
-      console.log('Updating task status:', { communityId, taskId, status });
       const token = localStorage.getItem('token');
       const response = await axios.patch<Task>(`/api/community/${communityId}/task/${taskId}/status`, { status }, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Update Task Status API Response:', response.data);
       const updatedTask = response.data;
       set(state => ({
         tasks: state.tasks.map(t => (t.id === taskId ? updatedTask : t)),
@@ -350,12 +339,10 @@ export const useTaskStore = create<TaskState>((set) => ({
   assignTask: async (communityId: string, taskId: string, assignedTo: string | null) => {
     set({ loading: true, error: null });
     try {
-      console.log('Assigning task:', { communityId, taskId, assignedTo });
       const token = localStorage.getItem('token');
       const response = await axios.post<TaskResponse>(`/api/community/${communityId}/task/${taskId}/assign`, { assignedTo }, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });
-      console.log('Assign Task API Response:', response.data);
       const updatedTask = response.data.data.task;
       set(state => ({
         tasks: state.tasks.map(t => (t.id === taskId ? updatedTask : t)),
@@ -392,7 +379,6 @@ export const useTaskStore = create<TaskState>((set) => ({
   deleteTask: async (communityId: string, taskId: string) => {
     set({ loading: true, error: null });
     try {
-      console.log('Deleting task:', { communityId, taskId });
       const token = localStorage.getItem('token');
       await axios.delete(`/api/community/${communityId}/task/${taskId}`, {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,

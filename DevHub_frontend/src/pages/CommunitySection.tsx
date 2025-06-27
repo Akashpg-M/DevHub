@@ -84,7 +84,6 @@ const CommunitySection: React.FC = () => {
         setLoading(true);
         setError(null);
         
-        console.log('Fetching community data for ID:', communityId);
         const [communityData] = await Promise.all([
           getCommunity(communityId),
           fetchMembers(communityId),
@@ -94,7 +93,6 @@ const CommunitySection: React.FC = () => {
           throw new Error('Community not found');
         }
 
-        console.log('Community data loaded:', communityData);
         setCommunity(communityData);
       } catch (error) {
         console.error('Error loading community data:', error);
@@ -271,20 +269,12 @@ const CommunitySection: React.FC = () => {
         {activeTab === 'projects' && (
           <ProjectSection 
             communityId={communityId!} 
-            onProjectSelect={(project) => {
-              // Handle project selection if needed
-              console.log('Selected project:', project);
-            }}
           />
         )}
 
         {activeTab === 'tasks' && (
           <TaskSection 
             communityId={communityId!}
-            onTaskSelect={(task) => {
-              // Handle task selection if needed
-              console.log('Selected task:', task);
-            }}
           />
         )}
       </div>

@@ -105,9 +105,7 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
 
   getCommunity: async (communityId: string) => {
     try {
-      console.log('Fetching community with ID:', communityId); // Debug log
       const { data } = await axios.get(`/api/community/${communityId}`);
-      console.log('/api Response for getCommunity:', data); // Debug log
       if (!data) {
         throw new Error('Community not found');
       }
