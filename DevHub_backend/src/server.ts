@@ -10,7 +10,6 @@ import { connectDB } from './db';
 
 dotenv.config();
 
-
 const app = express();
 const httpServer = createServer(app);
 
@@ -65,7 +64,7 @@ app.use((err: AppError, _req: Request, res: Response, _next: NextFunction) => {
 
 
 if (process.env.NODE_ENV === 'production') {
-  const frontendPath = path.join(__dirname, '..', '..', 'DevHub_frontend', 'dist');
+  const frontendPath = path.join(__dirname, '..', '..', 'frontend', 'dist');
   app.use(express.static(frontendPath));
 
   app.get('*', (_req, res) => {
